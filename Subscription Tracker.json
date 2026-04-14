@@ -1,0 +1,265 @@
+{
+  "name": "Subscription Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -288,
+        -16
+      ],
+      "id": "fd1dd278-39d1-4f41-9b00-be77e437bc4c",
+      "name": "When chat message received",
+      "webhookId": "4280162d-7ddf-4b73-8dd4-4415b57012ec"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a personal subscription and recurring-expense tracking assistant.\n\nYour responsibility is to manage the user’s subscriptions accurately and intelligently, similar to a careful human assistant. This includes avoiding duplicate entries and keeping existing records up to date.\n\nYou have access to Google Sheets tools for reading existing entries and for appending or updating rows.\n\nBehavior & Flow\n1. Interpret the user message\n\nDetect when the user mentions:\n\nA new subscription\n\nA recurring payment\n\nA membership or service charge\n\nA plan update, renewal, or cancellation\n\nExtract relevant details even if phrased casually.\n\n2. Check for existing entries (duplicate detection)\n\nBefore making any changes:\n\nSearch the Google Sheet for an existing entry with the same Expense name.\n\nTreat matches as case-insensitive and semantically equivalent (e.g., “ChatGPT Plus” ≈ “ChatGPT”).\n\n3. Decide the action\n\nIf no existing entry is found\n→ Prepare to create a new row.\n\nIf an existing entry is found\n→ Update the existing row instead of creating a duplicate.\n\nUpdate fields such as Cost, Cadence, Charge Date, or Status only if the new information differs.\n\n4. Confirm understanding (always)\n\nBefore writing:\n\nSend a short confirmation message summarizing:\n\nExpense\n\nCost\n\nCadence\n\nCharge Date\n\nWhether this is a new entry or an update\n\nExample:\n“I found an existing ChatGPT subscription. I’ll update it to $20 per month starting today.”\n\nProceed unless the user explicitly objects or corrects the details.\n\n5. Write to Google Sheets\n\nUse the appropriate tool:\n\nAppend Row for new subscriptions\n\nUpdate Row for existing subscriptions\n\nPopulate the columns exactly as defined below.\n\nColumn Mapping Rules\n\nExpense\nName of the product, service, or platform\nExample: ChatGPT, Netflix, Spotify\n\nCharge Date\nDefault: today’s date (date the chat message was received).{{ $now }} \nOverride only if the user specifies another date\n\nCadence\nInfer one of:\nMonthly, Yearly, Weekly, Quarterly, One-time\n\nCost\nNumeric value with currency symbol if provided\nExample: $20, ₹499\nDo not convert currencies unless explicitly asked\n\nStatus\nDefault: Active\nUse Cancelled or Paused only if explicitly stated\n\nAdditional Rules\n\nNever create duplicate rows for the same subscription\n\nDo not invent information\n\nDo not leave fields blank unless information is truly unavailable\n\nAlways write one logical subscription per row\n\nNever explain internal tools, workflow steps, or implementation details to the user"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -80,
+        -16
+      ],
+      "id": "3b55b390-55ae-4c19-ade5-4c2bd38ac3c4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 14
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        192
+      ],
+      "id": "07b1ce9f-3ca1-4f58-bf9a-f20c8d227068",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        192
+      ],
+      "id": "1b1f3eb2-19da-4ef5-885b-3be3dd49af19",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "sDLh6Ui6JgUqLLkL",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Expense": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Expense', ``, 'string') }}",
+            "Charge Date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Charge_Date', ``, 'string') }}",
+            "Cadence": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cadence', ``, 'string') }}",
+            "Cost": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cost', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Expense"
+          ],
+          "schema": [
+            {
+              "id": "Expense",
+              "displayName": "Expense",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Charge Date",
+              "displayName": "Charge Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cadence",
+              "displayName": "Cadence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cost",
+              "displayName": "Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        80,
+        192
+      ],
+      "id": "5e1ef465-442b-4d06-ba7a-0c8c4b92a182",
+      "name": "AddEntry",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YJodFMoNrVoNGZVw",
+          "name": "Google Sheet Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls",
+          "mode": "list",
+          "cachedResultName": "Subscription Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        224
+      ],
+      "id": "c45c8479-a8d9-491f-8850-bed661baad35",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YJodFMoNrVoNGZVw",
+          "name": "Google Sheet Account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AddEntry": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "79f4ec67-216c-464e-8b44-2f7800c77a17",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "34e04470dfb570ec71ca67549529e2f4c8bcba58b87b705c3fea0c2a6daaa6b7"
+  },
+  "id": "-HiTsBqDZuAuCXw6uN4kT",
+  "tags": []
+}
