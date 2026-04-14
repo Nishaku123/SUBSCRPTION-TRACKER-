@@ -13,7 +13,7 @@
       ],
       "id": "fd1dd278-39d1-4f41-9b00-be77e437bc4c",
       "name": "When chat message received",
-      "webhookId": "4280162d-7ddf-4b73-8dd4-4415b57012ec"
+      "webhookId": "YOUR_WEBHOOK_ID"
     },
     {
       "parameters": {
@@ -58,7 +58,7 @@
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
-          "id": "sDLh6Ui6JgUqLLkL",
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
           "name": "Groq account"
         }
       }
@@ -68,7 +68,7 @@
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit?gid=0#gid=0",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "url"
         },
         "sheetName": {
@@ -76,7 +76,7 @@
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "tracker",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit#gid=0"
+          "cachedResultUrl": "YOUR_GOOGLE_SHEET_ID"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -153,7 +153,7 @@
       "name": "AddEntry",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "YJodFMoNrVoNGZVw",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "Google Sheet Account"
         }
       }
@@ -162,17 +162,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls",
+          "value": "YOUR_GOOGLE_SHEET_ID",
           "mode": "list",
           "cachedResultName": "Subscription Tracker",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit?usp=drivesdk"
+          "cachedResultUrl": "YOUR_GOOGLE_SHEET_ID"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "tracker",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tlPMRyIxOded3Vgy4bNKdA6IvbrprDTRDAtQWDIK_ls/edit#gid=0"
+          "cachedResultUrl": "YOUR_GOOGLE_SHEET_ID"
         },
         "options": {}
       },
@@ -186,7 +186,7 @@
       "name": "Get row(s) in sheet in Google Sheets",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "YJodFMoNrVoNGZVw",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "Google Sheet Account"
         }
       }
@@ -258,7 +258,7 @@
   "versionId": "79f4ec67-216c-464e-8b44-2f7800c77a17",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "34e04470dfb570ec71ca67549529e2f4c8bcba58b87b705c3fea0c2a6daaa6b7"
+    "instanceId": "YOUR_INSTANCE_ID"
   },
   "id": "-HiTsBqDZuAuCXw6uN4kT",
   "tags": []
